@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  Container,
-  Card,
-  Icon,
-  Message,
-  Loader,
-  Transition,
-  Button,
-} from 'semantic-ui-react';
+import { Container, Loader } from 'semantic-ui-react';
 import CardContainer from './components/CardContainer';
+import Error from './components/Error';
 import './App.css';
 
 function App() {
@@ -24,10 +17,11 @@ function App() {
       const data = await axios.get(`https://swapi.dev/api/films/`);
       console.log(data.data.results);
       setFilms(data.data.results);
-      setLoading(false);
     } catch (err) {
       console.log(err.message);
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,12 +36,7 @@ function App() {
           </Loader>
         )}
         {films.length > 0 && films.map((film) => <CardContainer film={film} />)}
-        {error && (
-          <Message>
-            <Message.Header>Error</Message.Header>
-            <p>{error}</p>
-          </Message>
-        )}
+        {error && <Error error={error} />}
       </Container>
     </div>
   );

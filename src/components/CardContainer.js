@@ -3,13 +3,14 @@ import { Card, Icon, Transition, Button } from 'semantic-ui-react';
 
 const CardContainer = ({ film }) => {
   const [visible, setVisible] = useState(false);
+  const { title, episode_id, release_date, opening_crawl, characters } = film;
 
   return (
-    <Card key={film.episode_id}>
+    <Card key={episode_id}>
       <Card.Content>
-        <Card.Header>{film.title}</Card.Header>
+        <Card.Header>{title}</Card.Header>
         <Card.Meta>
-          <span className='date'>{film.release_date}</span>
+          <span className='date'>{release_date}</span>
         </Card.Meta>
         <Button
           onClick={() => {
@@ -19,13 +20,13 @@ const CardContainer = ({ film }) => {
           {visible ? 'Hide' : 'Show Details'}
         </Button>
         <Transition.Group animation={'drop'} duration={1500}>
-          {visible && <Card.Description>{film.opening_crawl}</Card.Description>}{' '}
+          {visible && <Card.Description>{opening_crawl}</Card.Description>}{' '}
         </Transition.Group>
       </Card.Content>
       <Card.Content extra>
         <a>
           <Icon name='users' />
-          {film.characters.length}
+          {characters.length}
         </a>
       </Card.Content>
     </Card>
