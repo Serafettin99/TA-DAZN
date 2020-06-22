@@ -1,24 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import {
+  Container,
+  Card,
+  Icon,
+  Message,
+  Loader,
+  Transition,
+  Button,
+} from 'semantic-ui-react';
+import CardContainer from './components/CardContainer';
 import './App.css';
 
 function App() {
+  const [films, setFilms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [visible, setVisible] = useState(false);
+
+  const getFilms = async () => {
+    try {
+      setLoading(true);
+      const data = await axios.get(`https://swapi.dev/api/films/`);
+      console.log(data.data.results);
+      setFilms(data.data.results);
+      setLoading(false);
+    } catch (err) {
+      console.log(err.message);
+      setError(err.message);
+    }
+  };
+
+  useEffect(getFilms, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Container>
+        {loading && (
+          <Loader active inline>
+            Loading...
+          </Loader>
+        )}
+        {films.length > 0 && films.map((film) => <CardContainer film={film} />)}
+        {error && (
+          <Message>
+            <Message.Header>Error</Message.Header>
+            <p>{error}</p>
+          </Message>
+        )}
+      </Container>
     </div>
   );
 }
