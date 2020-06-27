@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import axios from 'axios';
-import { Loader } from 'semantic-ui-react';
-import CardContainer from './components/CardContainer';
-import CharacterCard from './components/CharacterCard';
+import { Loader, Image, Container } from 'semantic-ui-react';
+import FilmCard from './components/FilmCard';
+import CharacterCards from './components/CharacterCards';
 import Header from './components/Header';
 import Search from './components/Search';
 import Error from './components/Error';
@@ -14,11 +16,32 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const [searchValue, setSearchValue] = useState('');
+
+  const getCharacters = async () => {
+    try {
+      setLoading(true);
+      const data = await axios.get(
+        `https://swapi.dev/api/people/?search=${searchValue}`,
+      );
+
+      setSearchResults(data.data.results);
+    } catch (err) {
+      console.log(err.message);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+      setTimeout(() => setError(''), 3500);
+    }
+  };
+  useEffect(() => {
+    getCharacters();
+  }, [searchValue]);
+
   const getFilms = async () => {
     try {
       setLoading(true);
       const data = await axios.get(`https://swapi.dev/api/films/`);
-      console.log(data.data.results);
       setFilms(data.data.results);
     } catch (err) {
       console.log(err.message);
@@ -28,33 +51,38 @@ function App() {
     }
   };
 
-  useEffect(getFilms, []);
+  useEffect(() => getFilms(), []);
 
   return (
-    <div>
-      <Header />
-      <Search
-        setError={setError}
-        setLoading={setLoading}
-        setCharacters={setSearchResults}
-      />
+    <Router>
+      <Container>
+        <Header />
+        <Switch>
+          <Route path='/movie/:id'>
+            <FilmCard films={films} error={error} />
+          </Route>
 
-      {loading && (
-        <Loader active inline>
-          Loading...
-        </Loader>
-      )}
-      {films.length > 0 && films.map((film) => <CardContainer film={film} />)}
-      {searchResults.length > 0 &&
-        searchResults.map((searchResult) => (
-          <CharacterCard
-            character={searchResult}
-            getFilms={getFilms}
-            movies={films}
-          />
-        ))}
-      {error && <Error error={error} />}
-    </div>
+          <Route path='/'>
+            <Search setSearchValue={setSearchValue} />
+            {loading && (
+              <Loader active inline>
+                Loading...
+              </Loader>
+            )}
+            {searchResults.length > 0 && searchValue.length > 2 ? (
+              <CharacterCards
+                characters={searchResults}
+                getFilms={getFilms}
+                films={films}
+              />
+            ) : (
+              <Image src='./movie-icon.svg' size='medium' />
+            )}
+            {error && <Error error={error} />}
+          </Route>
+        </Switch>
+      </Container>
+    </Router>
   );
 }
 
