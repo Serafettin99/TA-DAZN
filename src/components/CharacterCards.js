@@ -6,10 +6,9 @@ export const CharacterCards = ({ characters, getFilms, films }) => {
   return (
     <Grid columns={2} divided>
       {characters.map((character) => (
-        <Grid.Column>
+        <Grid.Column key={character.name}>
           <Grid.Row>
             <CharacterCard
-              key={character.name}
               character={character}
               getFilms={getFilms}
               movies={films}

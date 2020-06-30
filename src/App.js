@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import axios from 'axios';
@@ -18,7 +18,23 @@ function App() {
 
   const [searchValue, setSearchValue] = useState('');
 
-  const getCharacters = async () => {
+  // const getCharacters = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const data = await axios.get(
+  //       `https://swapi.dev/api/people/?search=${searchValue}`,
+  //     );
+
+  //     setSearchResults(data.data.results);
+  //   } catch (err) {
+  //     console.log(err.message);
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //     setTimeout(() => setError(''), 3500);
+  //   }
+  // };
+  const memoizedCallback = useCallback(async () => {
     try {
       setLoading(true);
       const data = await axios.get(
@@ -33,10 +49,11 @@ function App() {
       setLoading(false);
       setTimeout(() => setError(''), 3500);
     }
-  };
-  useEffect(() => {
-    getCharacters();
   }, [searchValue]);
+
+  useEffect(() => {
+    memoizedCallback();
+  }, [searchValue, memoizedCallback]);
 
   console.log({ searchValue });
 
