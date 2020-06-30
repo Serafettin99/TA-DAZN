@@ -8,10 +8,10 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { useParams, Link } from 'react-router-dom';
+import Error from './Error';
 
 const FilmCard = ({ films, error }) => {
   const [visible, setVisible] = useState(false);
-  console.log({ error });
 
   let { id } = useParams();
 
@@ -21,6 +21,8 @@ const FilmCard = ({ films, error }) => {
         <Loader active inline>
           Loading...
         </Loader>{' '}
+        <Link to='/' /> Link
+        {error && <Error error={error} />}
       </>
     );
 
