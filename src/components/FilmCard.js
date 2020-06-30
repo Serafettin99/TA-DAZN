@@ -9,8 +9,9 @@ import {
 } from 'semantic-ui-react';
 import { useParams, Link } from 'react-router-dom';
 
-const FilmCard = ({ films }) => {
+const FilmCard = ({ films, error }) => {
   const [visible, setVisible] = useState(false);
+  console.log({ error });
 
   let { id } = useParams();
 
@@ -20,7 +21,6 @@ const FilmCard = ({ films }) => {
         <Loader active inline>
           Loading...
         </Loader>{' '}
-        <Link to='/' />
       </>
     );
 

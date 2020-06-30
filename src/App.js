@@ -38,6 +38,8 @@ function App() {
     getCharacters();
   }, [searchValue]);
 
+  console.log({ searchValue });
+
   const getFilms = async () => {
     try {
       setLoading(true);
@@ -51,7 +53,21 @@ function App() {
     }
   };
 
-  useEffect(() => getFilms(), []);
+  // async function getFilms() {
+  //   try {
+  //     setLoading(true);
+  //     const data = await axios.get(`https://swapi.dev/api/films/`);
+  //     setFilms(data.data.results);
+  //   } catch (err) {
+  //     console.log(err.message);
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+  useEffect(() => {
+    getFilms();
+  }, []);
 
   return (
     <Router>
