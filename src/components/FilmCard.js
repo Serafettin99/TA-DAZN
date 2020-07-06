@@ -21,7 +21,6 @@ const FilmCard = ({ films, error }) => {
         <Loader active inline>
           Loading...
         </Loader>{' '}
-        <Link to='/' /> Link
         {error && <Error error={error} />}
       </>
     );
