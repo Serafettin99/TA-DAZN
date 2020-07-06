@@ -1,3 +1,7 @@
+Deployed on Netlify : 
+https://amazing-kepler-554f7d.netlify.app/
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
